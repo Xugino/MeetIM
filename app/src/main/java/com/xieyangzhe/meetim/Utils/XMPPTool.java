@@ -7,6 +7,7 @@ import com.xieyangzhe.meetim.Models.ChatMessage;
 import com.xieyangzhe.meetim.Models.Contact;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
@@ -54,8 +55,12 @@ public class XMPPTool extends XMPPTCPConnection {
                 builder.setCompressionEnabled(false);
                 xmppTool = new XMPPTool(builder.build());
                 xmppTool.connect();
-                chatManager = ChatManager.getInstanceFor(getXmppTool());
 
+                ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(getXmppTool());
+                reconnectionManager.setEnabledPerDefault(true);
+                reconnectionManager.enableAutomaticReconnection();
+
+                chatManager = ChatManager.getInstanceFor(getXmppTool());
                 chatManager.addChatListener(new ChatManagerListener() {
                     @Override
                     public void chatCreated(Chat chat, boolean createdLocally) {
