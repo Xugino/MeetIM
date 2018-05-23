@@ -78,6 +78,14 @@ public class XMPPTool extends XMPPTCPConnection {
         return xmppTool;
     }
 
+    public boolean getConnectionStatus() {
+        return  getXmppTool().isConnected();
+    }
+
+    public boolean getLoginStatus() {
+        return getXmppTool().isAuthenticated();
+    }
+
     private void checkConnection() {
         if (!getXmppTool().isConnected()) {
             try {
