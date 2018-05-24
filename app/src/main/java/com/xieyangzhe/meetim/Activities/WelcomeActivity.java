@@ -20,20 +20,14 @@ public class WelcomeActivity extends AppCompatActivity {
 
         buttonTest = findViewById(R.id.button_test);
         buttonSend = findViewById(R.id.button_send);
-        buttonTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonTest.setOnClickListener(view -> {
                 PreferencesUtils.getInstance().saveData("Hello", "TTTTTTTTT");
                 String tmp = (String) PreferencesUtils.getInstance().getData("Hello", "");
                 Log.d("TEST", tmp);
-            }
         });
 
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonSend.setOnClickListener(view -> {
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-            }
         });
     }
 }
