@@ -9,13 +9,19 @@ import android.content.Context;
 
 public class IMApplication extends Application {
     private static Context AppContext = null;
+    private static String AppPackegname;
 
     public void onCreate() {
         super.onCreate();
         AppContext = getApplicationContext();
+        AppPackegname = getPackageName();
     }
 
     public static Context getAppContext() {
         return AppContext;
+    }
+
+    public static String getAppPackegname() {
+        return AppPackegname;
     }
 }

@@ -87,7 +87,7 @@ public class XMPPTool extends XMPPTCPConnection {
         return  getXmppTool().isConnected();
     }
 
-    public boolean getLoginStatus() {
+    public static boolean getLoginStatus() {
         return getXmppTool().isAuthenticated();
     }
 
@@ -101,7 +101,7 @@ public class XMPPTool extends XMPPTCPConnection {
         }
     }
 
-    private void cutConnection() {
+    public void cutConnection() {
         if (xmppTool == null) {
             return;
         } else if (getXmppTool().isConnected()) {

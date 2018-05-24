@@ -1,5 +1,6 @@
 package com.xieyangzhe.meetim.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -12,8 +13,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Services.XMPPService;
+import com.xieyangzhe.meetim.Utils.PreferencesUtils;
+import com.xieyangzhe.meetim.Utils.XMPPTool;
 
 /**
  * A login screen that offers login via email/password.
@@ -71,6 +76,18 @@ public class LoginActivity extends AppCompatActivity {
             textUsername.setError("Error");
         } else if (!isUsernameValid(username)) {
             textUsername.setError("Error");
+        }
+
+        PreferencesUtils.getInstance().saveData("username", username);
+        PreferencesUtils.getInstance().saveData("password", password);
+
+        startService(new Intent(this, XMPPService.class));
+
+        if (XMPPTool.getLoginStatus()) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "Log in failed, please try again.", Toast.LENGTH_LONG).show();
         }
 
     }
