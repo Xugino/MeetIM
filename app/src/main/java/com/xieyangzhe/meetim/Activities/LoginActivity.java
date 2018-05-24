@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Log in failed, please try again.", Toast.LENGTH_LONG).show();
+                    stopService(new Intent(LoginActivity.this, XMPPService.class));
                 }
             }
         };
@@ -108,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         PreferencesUtils.getInstance().saveData("password", password);
 
         startService(new Intent(this, XMPPService.class));
-
     }
 
     private boolean isUsernameValid(String username) {
