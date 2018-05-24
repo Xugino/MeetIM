@@ -52,16 +52,13 @@ public class XMPPService extends Service {
         if (!threadStatus) {
             threadStatus = true;
             if (xmppThread == null || !xmppThread.isAlive()) {
-                xmppThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        xmppHandler = new Handler();
-                        initXMPPTool();
-                        intent.putExtra(LOGIN_STATUS, XMPPTool.getLoginStatus());
-                        sendBroadcast(intent);
-                        Looper.loop();
-                    }
+                xmppThread = new Thread(() -> {
+                    Looper.prepare();
+                    xmppHandler = new Handler();
+                    initXMPPTool();
+                    intent.putExtra(LOGIN_STATUS, XMPPTool.getLoginStatus());
+                    sendBroadcast(intent);
+                    Looper.loop();
                 });
                 xmppThread.start();
             }
@@ -70,11 +67,8 @@ public class XMPPService extends Service {
 
     public void stop() {
         threadStatus = false;
-        xmppHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                xmppTool.cutConnection();
-            }
+        xmppHandler.post(() -> {
+            xmppTool.cutConnection();
         });
     }
 
