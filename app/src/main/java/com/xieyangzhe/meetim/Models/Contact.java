@@ -8,9 +8,20 @@ public class Contact {
     private String jid;
     private String name;
 
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
+    }
+
+    private String head;
+
     public Contact(String jid, String name) {
         this.jid = jid;
         this.name = name;
+        this.head = head;
     }
 
     public String getJid() {

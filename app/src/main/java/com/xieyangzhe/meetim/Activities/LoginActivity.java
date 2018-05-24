@@ -109,7 +109,11 @@ public class LoginActivity extends AppCompatActivity {
         PreferencesUtils.getInstance().saveData("username", username);
         PreferencesUtils.getInstance().saveData("password", password);
 
-        startService(new Intent(this, XMPPService.class));
+        if (XMPPTool.getLoginStatus()) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        } else {
+            startService(new Intent(this, XMPPService.class));
+        }
     }
 
     private boolean isUsernameValid(String username) {

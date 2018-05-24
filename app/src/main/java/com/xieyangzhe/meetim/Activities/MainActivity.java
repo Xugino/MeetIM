@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_contacts:
                 fragment = new ContactListFragment();
                 break;
-            case R.id.nav_settings:
+            case R.id.nav_me:
                 fragment = new SettingsFragment();
                 break;
             default:

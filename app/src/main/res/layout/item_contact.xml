@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    app:ios="false">
+    <LinearLayout
+        android:id="@+id/contact"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent" >
+
+        <ImageView
+            android:id="@+id/head_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:text="Joseph"
+            android:gravity="center_vertical"
+            android:id="@+id/contact_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:textSize="20sp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:background="#FF0000"
+        android:clickable="true"
+        android:text="Delete"
+        android:textColor="@android:color/white" />
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>
