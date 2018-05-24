@@ -18,6 +18,11 @@ public class XMPPService extends Service {
     private Thread xmppThread;
     private Handler xmppHandler;
 
+    public static final String LOGIN_RECEIVER = "com.xieyangzhe.meetim.RECEIVER";
+    public static final String LOGIN_STATUS = "com.xieyangzhe.meetim.LOGIN_STATUS";
+
+    private Intent intent = new Intent(LOGIN_RECEIVER);
+
     public XMPPService() {
     }
 
@@ -53,6 +58,8 @@ public class XMPPService extends Service {
                         Looper.prepare();
                         xmppHandler = new Handler();
                         initXMPPTool();
+                        intent.putExtra(LOGIN_STATUS, XMPPTool.getLoginStatus());
+                        sendBroadcast(intent);
                         Looper.loop();
                     }
                 });

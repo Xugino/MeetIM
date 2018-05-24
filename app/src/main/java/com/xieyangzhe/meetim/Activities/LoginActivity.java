@@ -1,6 +1,9 @@
 package com.xieyangzhe.meetim.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -33,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonLogin;
     private TextView textRegister;
 
+    private BroadcastReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,22 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
         });
 
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean loginStatus = intent.getBooleanExtra(XMPPService.LOGIN_STATUS, false);
+                if (loginStatus) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Log in failed, please try again.", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(XMPPService.LOGIN_RECEIVER);
+        registerReceiver(receiver, intentFilter);
     }
 
     private void attemptLogin() {
@@ -88,13 +109,6 @@ public class LoginActivity extends AppCompatActivity {
 
         startService(new Intent(this, XMPPService.class));
 
-        if (XMPPTool.getLoginStatus()) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Log in failed, please try again.", Toast.LENGTH_LONG).show();
-        }
-
     }
 
     private boolean isUsernameValid(String username) {
@@ -103,6 +117,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
     }
 }
 
