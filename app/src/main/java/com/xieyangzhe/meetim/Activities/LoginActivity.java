@@ -20,6 +20,8 @@ import com.xieyangzhe.meetim.Services.XMPPService;
 import com.xieyangzhe.meetim.Utils.PreferencesUtils;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
 
+import org.jivesoftware.smackx.iqregister.packet.Registration;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private AutoCompleteTextView textUsername;
     private EditText textPassword;
     private Button buttonLogin;
+    private TextView textRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         textUsername = findViewById(R.id.username);
         buttonLogin = findViewById(R.id.sign_in_button);
         textPassword = findViewById(R.id.password);
+        textRegister = findViewById(R.id.text_register);
 
         textPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -55,6 +59,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        textRegister.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                finish();
             }
         });
 

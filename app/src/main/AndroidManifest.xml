@@ -34,7 +34,8 @@
 
         <activity
             android:name=".Activities.MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main" />
+        <activity android:name=".Activities.RegisterActivity"></activity>
     </application>
 
 </manifest>

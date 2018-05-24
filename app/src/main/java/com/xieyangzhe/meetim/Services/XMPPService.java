@@ -18,8 +18,6 @@ public class XMPPService extends Service {
     private Thread xmppThread;
     private Handler xmppHandler;
 
-    public static final String UI_AUTHENTICATED = "UI_AUTHENTICATED";
-
     public XMPPService() {
     }
 
