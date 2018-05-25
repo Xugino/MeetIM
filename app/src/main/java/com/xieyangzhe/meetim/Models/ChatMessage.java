@@ -1,6 +1,10 @@
 package com.xieyangzhe.meetim.Models;
 
+import com.github.bassaer.chatmessageview.model.Message;
+
 import org.jivesoftware.smackx.time.packet.Time;
+
+import java.util.Calendar;
 
 /**
  * Created by joseph on 5/22/18.
@@ -9,13 +13,15 @@ import org.jivesoftware.smackx.time.packet.Time;
 public class ChatMessage {
 
     private String msgBody;
-    private int from;
-    private Time msgTime;
+    private String username;
+    private Calendar msgTime;
+    private boolean isMe;
 
-    public ChatMessage(String msgBody, int from, Time msgTime) {
+    public ChatMessage(String msgBody, String username, Calendar msgTime, boolean isMe) {
         this.msgBody = msgBody;
-        this.from = from;
+        this.username = username;
         this.msgTime = msgTime;
+        this.isMe = isMe;
     }
 
     public String getMsgBody() {
@@ -26,19 +32,27 @@ public class ChatMessage {
         this.msgBody = msgBody;
     }
 
-    public int getFrom() {
-        return from;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFrom(int from) {
-        this.from = from;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Time getMsgTime() {
+    public Calendar getMsgTime() {
         return msgTime;
     }
 
-    public void setMsgTime(Time msgTime) {
+    public void setMsgTime(Calendar msgTime) {
         this.msgTime = msgTime;
+    }
+
+    public boolean isMe() {
+        return isMe;
+    }
+
+    public void setMe(boolean me) {
+        isMe = me;
     }
 }
