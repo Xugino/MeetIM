@@ -1,10 +1,17 @@
 package com.xieyangzhe.meetim.Models;
 
+import android.graphics.Bitmap;
+
+import com.github.bassaer.chatmessageview.model.IChatUser;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by joseph on 5/22/18.
  */
 
-public class Contact {
+public class Contact implements IChatUser {
     private String jid;
     private String name;
 
@@ -18,7 +25,7 @@ public class Contact {
 
     private String head;
 
-    public Contact(String jid, String name) {
+    public Contact(String jid, String name, String head) {
         this.jid = jid;
         this.name = name;
         this.head = head;
@@ -38,5 +45,22 @@ public class Contact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @NotNull
+    @Override
+    public String getId() {
+        return jid;
+    }
+
+    @Nullable
+    @Override
+    public Bitmap getIcon() {
+        return null;
+    }
+
+    @Override
+    public void setIcon(Bitmap bitmap) {
+
     }
 }

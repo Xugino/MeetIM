@@ -2,7 +2,9 @@ package com.xieyangzhe.meetim.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +51,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.textContactName.setText(contact.getName());
         holder.content.setOnClickListener(view -> {
             Intent intent = new Intent(context, ChatActivity.class);
-            intent.putExtra("JID_TO", contactList.get(position).getJid());
-            intent.putExtra("USERNAME_TO", contactList.get(position).getName());
-            intent.putExtra("HEAD_TO", contactList.get(position).getHead());
+            Bundle bundle = new Bundle();
+            bundle.putString("JID_TO", contactList.get(position).getJid());
+            bundle.putString("USERNAME_TO", contactList.get(position).getName());
+            bundle.putString("HEAD_TO", contactList.get(position).getHead());
+            intent.putExtras(bundle);
             context.startActivity(intent);
         });
 

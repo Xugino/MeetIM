@@ -7,7 +7,6 @@
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
-        android:background="@color/white"
         android:id="@+id/list_contacts"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

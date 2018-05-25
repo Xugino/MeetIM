@@ -34,6 +34,7 @@ public class XMPPTool extends XMPPTCPConnection {
     private final static String SERVER_IP = "39.105.73.30";
     private final static int PORT_NUMBER = 5222;
     private final static int TIME_OUT = 6000;
+    private static String currentUserName;
 
     private static ChatManager chatManager;
 
@@ -81,6 +82,10 @@ public class XMPPTool extends XMPPTCPConnection {
             }
         }
         return xmppTool;
+    }
+
+    public static String getCurrentUserName() {
+        return currentUserName;
     }
 
     public boolean getConnectionStatus() {
@@ -142,7 +147,13 @@ public class XMPPTool extends XMPPTCPConnection {
                 return true;
             } else {
                 getXmppTool().login(username, password);
-                return getXmppTool().isAuthenticated();
+                if (getXmppTool().isAuthenticated()) {
+                    currentUserName = username;
+                    return true;
+                } else {
+                    return false;
+                }
+                //return getXmppTool().isAuthenticated();
             }
         } catch (Exception e) {
             Log.d("ERROR", "doLogin: " + e.getMessage());
@@ -153,7 +164,7 @@ public class XMPPTool extends XMPPTCPConnection {
     public List<Contact> getContactList() {
         List<Contact> contactList = new ArrayList<>();
         for (RosterEntry entry : Roster.getInstanceFor(getXmppTool()).getEntries()) {
-            Contact contact = new Contact(entry.getUser(), entry.getName());
+            Contact contact = new Contact(entry.getUser(), entry.getName(), "");
             contactList.add(contact);
         }
         return contactList;
