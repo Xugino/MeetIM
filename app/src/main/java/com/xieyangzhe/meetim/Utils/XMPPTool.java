@@ -81,6 +81,10 @@ public class XMPPTool extends XMPPTCPConnection {
                         public void processMessage(Chat chat, Message message) {
                             //TODO: Process message
                             Log.d("CHAT", message.toString());
+                            Intent intent = new Intent(MESSAGE_RECEIVER);
+                            intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/mobile", ""));
+                            intent.putExtra("FROM_MSG_BODY", message.getBody());
+                            IMApplication.getAppContext().sendBroadcast(intent);
                         }
                     });
                 }

@@ -3,6 +3,7 @@ package com.xieyangzhe.meetim.Activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,13 +21,14 @@ public class ChatActivity extends AppCompatActivity {
 
     private ChatView chatView;
     private BroadcastReceiver broadcastReceiver;
+    private Contact you;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Bundle bundle = this.getIntent().getExtras();
-        final Contact you = new Contact (
+        you = new Contact (
                 bundle.getString("JID_TO"),
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
@@ -63,11 +65,38 @@ public class ChatActivity extends AppCompatActivity {
 
         chatView.setOnClickOptionButtonListener(view -> {
         });
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String fromUsername = intent.getStringExtra("FROM_USERNAME");
+                String fromMsgBody = intent.getStringExtra("FROM_MSG_BODY");
+
+                if (fromUsername.equals(you.getJid())) {
+                    Message messageYou = new Message.Builder()
+                            .setUser(you)
+                            .setRight(false)
+                            .setText(fromMsgBody)
+                            .build();
+                    chatView.receive(messageYou);
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(XMPPTool.MESSAGE_RECEIVER);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void doSendMessage(String msgText, Contact you) {
         new Thread(() -> {
             XMPPTool.getXmppTool().sendMessage(msgText, you);
         }).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }
