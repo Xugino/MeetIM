@@ -1,6 +1,8 @@
 package com.xieyangzhe.meetim.Utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.xieyangzhe.meetim.Models.ChatMessage;
@@ -30,6 +32,7 @@ public class XMPPTool extends XMPPTCPConnection {
 
     private static XMPPTool xmppTool;
 
+    public final static String MESSAGE_RECEIVER = "com.xieyangzhe.meetim.MESSAGE";
     private final static String SERVER_NAME = "xmpp.xieyangzhe.com";
     private final static String SERVER_IP = "39.105.73.30";
     private final static int PORT_NUMBER = 5222;
@@ -60,28 +63,29 @@ public class XMPPTool extends XMPPTCPConnection {
                 ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(getXmppTool());
                 reconnectionManager.setEnabledPerDefault(true);
                 reconnectionManager.enableAutomaticReconnection();
-
-                chatManager = ChatManager.getInstanceFor(getXmppTool());
-                chatManager.addChatListener(new ChatManagerListener() {
-                    @Override
-                    public void chatCreated(Chat chat, boolean createdLocally) {
-                        if (!createdLocally) {
-                            chat.addMessageListener(new ChatMessageListener() {
-                                @Override
-                                public void processMessage(Chat chat, Message message) {
-                                    //TODO: Process message
-                                    Log.d("CHAT", message.toString());
-                                }
-                            });
-                        }
-                    }
-                });
-                //tool.setPacketReplyTimeout(TIME_OUT);
             } catch (Exception e) {
                 Log.d("ERROR", "getXmppTool: " + e.getMessage());
             }
         }
         return xmppTool;
+    }
+
+    private void initChatManager() {
+        chatManager = ChatManager.getInstanceFor(getXmppTool());
+        chatManager.addChatListener(new ChatManagerListener() {
+            @Override
+            public void chatCreated(Chat chat, boolean createdLocally) {
+                if (!createdLocally) {
+                    chat.addMessageListener(new ChatMessageListener() {
+                        @Override
+                        public void processMessage(Chat chat, Message message) {
+                            //TODO: Process message
+                            Log.d("CHAT", message.toString());
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public static String getCurrentUserName() {
@@ -149,6 +153,7 @@ public class XMPPTool extends XMPPTCPConnection {
                 getXmppTool().login(username, password);
                 if (getXmppTool().isAuthenticated()) {
                     currentUserName = username;
+                    initChatManager();
                     return true;
                 } else {
                     return false;
@@ -173,7 +178,11 @@ public class XMPPTool extends XMPPTCPConnection {
     public boolean sendMessage(String msgBody, Contact contact) {
         checkConnection();
         checkLogin();
-        Chat chat = chatManager.createChat(contact.getJid() + "@" + SERVER_IP);
+        Log.d("AAA", contact.getJid());
+        if (chatManager == null) {
+            initChatManager();
+        }
+        Chat chat = chatManager.createChat(contact.getJid());
         try {
             chat.sendMessage(msgBody);
         } catch (Exception e) {

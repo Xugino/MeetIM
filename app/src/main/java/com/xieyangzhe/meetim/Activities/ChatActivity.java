@@ -1,5 +1,8 @@
 package com.xieyangzhe.meetim.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.xieyangzhe.meetim.Utils.XMPPTool;
 public class ChatActivity extends AppCompatActivity {
 
     private ChatView chatView;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,36 +32,42 @@ public class ChatActivity extends AppCompatActivity {
                 bundle.getString("HEAD_TO")
         );
 
-        final Contact me = new Contact (
-                "",
-                XMPPTool.getCurrentUserName(),
-                ""
-        );
-
         chatView = findViewById(R.id.chat_view);
-
         chatView.setOnClickSendButtonListener(view -> {
 
-
+            Contact me = new Contact ("", XMPPTool.getCurrentUserName(), "");
             String msgText = chatView.getInputText();
+
+            doSendMessage(msgText, you);
+
             Message message1 = new Message.Builder()
                     .setUser(me)
                     .setRight(true)
                     .setText(msgText)
                     .build();
 
+            chatView.send(message1);
+            chatView.setInputText("");
+
+
+            /*
             Message message2 = new Message.Builder()
                     .setUser(you)
                     .setRight(false)
                     .setText(you.getName())
                     .build();
 
-            chatView.send(message1);
             chatView.receive(message2);
-            chatView.setInputText("");
+            */
         });
 
         chatView.setOnClickOptionButtonListener(view -> {
         });
+    }
+
+    private void doSendMessage(String msgText, Contact you) {
+        new Thread(() -> {
+            XMPPTool.getXmppTool().sendMessage(msgText, you);
+        }).start();
     }
 }
