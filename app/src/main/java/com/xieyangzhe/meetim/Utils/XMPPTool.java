@@ -202,10 +202,9 @@ public class XMPPTool extends XMPPTCPConnection {
             checkConnection();
             checkLogin();
             Roster roster = Roster.getInstanceFor(getXmppTool());
-            roster.createEntry(username, username, null);
+            roster.createEntry(username + SERVER_IP, username, null);
         } catch (Exception e) {
             Log.d("ERROR", "addContact: " + e.getMessage());
-            return false;
         }
         return true;
     }

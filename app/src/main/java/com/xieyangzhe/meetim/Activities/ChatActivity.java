@@ -81,11 +81,8 @@ public class ChatActivity extends AppCompatActivity {
                     .setText(msgText)
                     .build();
 
-            //messageMe.setIconVisibility(true);
             chatView.send(messageMe);
             chatView.setInputText("");
-
-            //Log.d("AAAAA", messageMe.getUser().getIcon().toString());
 
             messageList.add(messageMe);
             saveMessage(messageMe);
@@ -106,8 +103,6 @@ public class ChatActivity extends AppCompatActivity {
                             .setRight(false)
                             .setText(fromMsgBody)
                             .build();
-                    //messageYou.setIconVisibility(true);
-                    //Log.d("AAAAA", messageYou.getUser().getIcon().toString());
                     chatView.receive(messageYou);
                     saveMessage(messageYou);
                 }

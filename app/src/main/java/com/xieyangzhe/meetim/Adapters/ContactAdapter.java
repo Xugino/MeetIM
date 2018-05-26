@@ -3,6 +3,8 @@ package com.xieyangzhe.meetim.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xieyangzhe.meetim.Activities.ChatActivity;
 import com.xieyangzhe.meetim.Models.Contact;
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.IMApplication;
+import com.xieyangzhe.meetim.Utils.XMPPTool;
 
 import java.util.List;
 
@@ -60,7 +65,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         });
 
         holder.itemView.findViewById(R.id.button_delete).setOnClickListener(view -> {
+            final Handler handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    contactList.remove(holder.getAdapterPosition());
+                    notifyDataSetChanged();
+                }
+            };
 
+            new Thread(() -> {
+                XMPPTool.getXmppTool().deleteContact(contactList.get(position));
+                handler.sendEmptyMessage(0);
+            }).start();
         });
     }
 

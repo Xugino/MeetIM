@@ -1,10 +1,6 @@
 package com.xieyangzhe.meetim.Models;
 
-import android.graphics.BitmapFactory;
-
 import com.github.bassaer.chatmessageview.model.Message;
-import com.xieyangzhe.meetim.R;
-import com.xieyangzhe.meetim.Utils.IMApplication;
 
 import java.util.ArrayList;
 import java.util.List;

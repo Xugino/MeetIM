@@ -1,5 +1,6 @@
 package com.xieyangzhe.meetim.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import com.xieyangzhe.meetim.Fragments.ChatListFragment;
 import com.xieyangzhe.meetim.Fragments.ContactListFragment;
 import com.xieyangzhe.meetim.Fragments.SettingsFragment;
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.XMPPTool;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //XMPPTool.getXmppTool().addContact("test2");
+                startActivity(new Intent(MainActivity.this, AddContactActivity.class));
             }
         });
 
