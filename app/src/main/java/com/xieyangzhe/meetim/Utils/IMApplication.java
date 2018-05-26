@@ -19,6 +19,7 @@ public class IMApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
+        registerActivityLifecycleCallbacks(new ActivityLifecycleListener());
         AppContext = getApplicationContext();
         AppPackegname = getPackageName();
     }

@@ -18,6 +18,7 @@ import com.github.bassaer.chatmessageview.model.Message;
 import com.xieyangzhe.meetim.Activities.ChatActivity;
 import com.xieyangzhe.meetim.Models.ChatMessage;
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.ActivityLifecycleListener;
 import com.xieyangzhe.meetim.Utils.DBTool;
 import com.xieyangzhe.meetim.Utils.IMApplication;
 import com.xieyangzhe.meetim.Utils.NotificationTool;
@@ -132,8 +133,10 @@ public class XMPPService extends Service {
                                     intent.putExtra("FROM_MSG_BODY", message.getBody());
                                     IMApplication.getAppContext().sendBroadcast(intent);
 
-                                    NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
-                                    notificationUtils.sendNotification(username, message.getBody(), pendingIntent);
+                                    if (ActivityLifecycleListener.isBackGround()) {
+                                        NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
+                                        notificationUtils.sendNotification(username, message.getBody(), pendingIntent);
+                                    }
                                 }
                             });
                         }
