@@ -1,6 +1,10 @@
 package com.xieyangzhe.meetim.Models;
 
+import android.graphics.BitmapFactory;
+
 import com.github.bassaer.chatmessageview.model.Message;
+import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.IMApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,8 @@ public class ChatMessageList {
                 .setText(chatMessage.getMsgBody())
                 .setSendTime(chatMessage.getMsgTime())
                 .build();
+        message.setIconVisibility(true);
+        message.hideIcon(false);
         return message;
     }
 

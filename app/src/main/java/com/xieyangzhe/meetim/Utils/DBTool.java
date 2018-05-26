@@ -23,35 +23,37 @@ public class DBTool {
         helper = new DBHelper(IMApplication.getAppContext());
     }
 
-    public void addSingleMessage(ChatMessage chatMessage) {
+    public void addSingleMessage(ChatMessage chatMessage, String username) {
+
         db = helper.getWritableDatabase();
+        //Log.d("INFO", "addSingleMessage: " + username);
+        db.execSQL("create table if not exists " + username +
+                "(id integer primary key autoincrement, " +
+                "content varcahr(200), " +
+                "fromuser varchar(30)," +
+                " sendtime Integer," +
+                " isme Integer)"
+        );
+
         ContentValues values = new ContentValues();
         values.put("content", chatMessage.getMsgBody());
         values.put("fromuser", chatMessage.getUsername());
         values.put("sendtime", chatMessage.getMsgTime().getTime().getTime());
         values.put("isme", chatMessage.isMe() ? 1 : 0);
-        db.insert("messages", null, values);
+        db.insert(username, null, values);
         db.close();
     }
 
-    public void addMessageList(ChatMessageList chatMessageList) {
-        db = helper.getWritableDatabase();
-        ContentValues values;
-        for (ChatMessage chatMessage : chatMessageList.getMessageList()) {
-            values = new ContentValues();
-            values.put("content", chatMessage.getMsgBody());
-            values.put("fromuser", chatMessage.getUsername());
-            values.put("sendtime", chatMessage.getMsgTime().getTime().getTime());
-            values.put("isme", chatMessage.isMe() ? 1 : 0);
-            db.insert("messages", null, values);
-        }
-        db.close();
-    }
-
-    public ChatMessageList get() {
+    public ChatMessageList get(String username) {
         ChatMessageList chatMessageList = new ChatMessageList();
         db = helper.getReadableDatabase();
-        Cursor cursor = db.query("messages", null, null, null, null, null, null);
+        Cursor cursor;
+        try {
+            cursor = db.query(username, null, null, null, null, null, null);
+        } catch (Exception e) {
+            return null;
+        }
+
         if (cursor.moveToFirst()) {
             do {
                 String content = cursor.getString(cursor.getColumnIndex("content"));
@@ -62,7 +64,7 @@ public class DBTool {
                 chatMessageList.addChatMessage(new ChatMessage(content, fromuser, sendtime, isme));
             } while (cursor.moveToNext());
         }
-
+        db.close();
         return chatMessageList;
 
     }

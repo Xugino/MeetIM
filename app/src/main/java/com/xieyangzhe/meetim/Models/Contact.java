@@ -1,8 +1,11 @@
 package com.xieyangzhe.meetim.Models;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.github.bassaer.chatmessageview.model.IChatUser;
+import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.IMApplication;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,6 +60,7 @@ public class Contact implements IChatUser {
     @Override
     public Bitmap getIcon() {
         return null;
+        //return BitmapFactory.decodeResource(IMApplication.getAppContext().getResources(), R.mipmap.baseline_account_circle_black_48dp);
     }
 
     @Override

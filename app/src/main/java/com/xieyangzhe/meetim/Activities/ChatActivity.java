@@ -29,16 +29,13 @@ public class ChatActivity extends AppCompatActivity {
     private ChatView chatView;
     private BroadcastReceiver broadcastReceiver;
     private Contact you;
+    private Contact me;
     private ChatMessageList messageList;
     private DBTool dbTool;
 
-    protected static final int RIGHT_BUBBLE_COLOR = R.color.colorPrimaryDark;
-    protected static final int LEFT_BUBBLE_COLOR = R.color.gray300;
     protected static final int BACKGROUND_COLOR = R.color.gray200;
     protected static final int SEND_BUTTON_COLOR = R.color.blueGray500;
     protected static final int OPTION_BUTTON_COLOR = R.color.teal500;
-    protected static final int RIGHT_MESSAGE_TEXT_COLOR = Color.WHITE;
-    protected static final int LEFT_MESSAGE_TEXT_COLOR = Color.BLACK;
     protected static final String INPUT_TEXT_HINT = "New message..";
     protected static final int MESSAGE_MARGIN = 5;
 
@@ -50,32 +47,30 @@ public class ChatActivity extends AppCompatActivity {
         dbTool = new DBTool();
         chatView = findViewById(R.id.chat_view);
 
-        chatView.setRightBubbleColor(ContextCompat.getColor(this,RIGHT_BUBBLE_COLOR));
-        chatView.setLeftBubbleColor(ContextCompat.getColor(this, LEFT_BUBBLE_COLOR));
-        chatView.setBackgroundColor(ContextCompat.getColor(this, BACKGROUND_COLOR));
-        chatView.setSendButtonColor(ContextCompat.getColor(this, SEND_BUTTON_COLOR));
-        chatView.setOptionIcon(R.drawable.ic_account_circle);
-        chatView.setOptionButtonColor(OPTION_BUTTON_COLOR);
-        chatView.setRightMessageTextColor(RIGHT_MESSAGE_TEXT_COLOR);
-        chatView.setLeftMessageTextColor(LEFT_MESSAGE_TEXT_COLOR);
-        chatView.setInputTextHint(INPUT_TEXT_HINT);
-        chatView.setMessageMarginTop(MESSAGE_MARGIN);
-        chatView.setMessageMarginBottom(MESSAGE_MARGIN);
-        chatView.setMaxInputLine(5);
-        chatView.setUsernameFontSize(getResources().getDimension(R.dimen.font_small));
-
         Bundle bundle = this.getIntent().getExtras();
         you = new Contact (
                 bundle.getString("JID_TO"),
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
         );
+        me = new Contact ("", XMPPTool.getCurrentUserName(), "");
 
         loadMessages();
 
+        chatView.setBackgroundColor(ContextCompat.getColor(this, BACKGROUND_COLOR));
+        chatView.setSendButtonColor(ContextCompat.getColor(this, SEND_BUTTON_COLOR));
+        chatView.setOptionIcon(R.drawable.ic_account_circle);
+        chatView.setOptionButtonColor(OPTION_BUTTON_COLOR);
+        chatView.setInputTextHint(INPUT_TEXT_HINT);
+        chatView.setMessageMarginTop(MESSAGE_MARGIN);
+        chatView.setMessageMarginBottom(MESSAGE_MARGIN);
+        chatView.setMaxInputLine(5);
+        chatView.setUsernameFontSize(getResources().getDimension(R.dimen.font_small));
+        chatView.setAutoHidingKeyboard(false);
+
         chatView.setOnClickSendButtonListener(view -> {
 
-            Contact me = new Contact ("", XMPPTool.getCurrentUserName(), "");
+
             String msgText = chatView.getInputText();
 
             doSendMessage(msgText, you);
@@ -86,8 +81,11 @@ public class ChatActivity extends AppCompatActivity {
                     .setText(msgText)
                     .build();
 
+            //messageMe.setIconVisibility(true);
             chatView.send(messageMe);
             chatView.setInputText("");
+
+            //Log.d("AAAAA", messageMe.getUser().getIcon().toString());
 
             messageList.add(messageMe);
             saveMessage(messageMe);
@@ -108,6 +106,8 @@ public class ChatActivity extends AppCompatActivity {
                             .setRight(false)
                             .setText(fromMsgBody)
                             .build();
+                    //messageYou.setIconVisibility(true);
+                    //Log.d("AAAAA", messageYou.getUser().getIcon().toString());
                     chatView.receive(messageYou);
                     saveMessage(messageYou);
                 }
@@ -134,16 +134,29 @@ public class ChatActivity extends AppCompatActivity {
     private void loadMessages() {
 
         List<Message> messages;
-        messageList = dbTool.get();
+        List<Message> savedMessages = new ArrayList<>();
+        messageList = dbTool.get(you.getName());
+        if (messageList == null) {
+            messageList = new ChatMessageList();
+            return;
+        }
         messages = messageList.getMessages();
 
+        for (Message message: messages) {
+            Message newMessage = new Message.Builder()
+                    .setUser(message.isRight()?me:you)
+                    .setRight(message.isRight())
+                    .setText(message.getText())
+                    .build();
+            savedMessages.add(newMessage);
+        }
         MessageView messageView = chatView.getMessageView();
 
-        messageView.init(messages);
+        messageView.init(savedMessages);
         messageView.setSelection(messageView.getCount() - 1);
     }
 
     private void saveMessage(Message message) {
-        dbTool.addSingleMessage(new ChatMessageList().convertToChatMessage(message));
+        dbTool.addSingleMessage(new ChatMessageList().convertToChatMessage(message), you.getName());
     }
 }

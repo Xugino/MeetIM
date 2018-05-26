@@ -12,6 +12,9 @@
     <com.github.bassaer.chatmessageview.view.ChatView
         android:id="@+id/chat_view"
         app:option_button_enable="true"
+        app:time_label_font_size="11sp"
+        app:username_font_size="12sp"
+        app:message_font_size="16sp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

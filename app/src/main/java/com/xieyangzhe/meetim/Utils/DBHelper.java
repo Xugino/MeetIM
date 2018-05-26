@@ -16,12 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table messages (" +
-                "id integer primary key autoincrement, " +
-                "content varcahr(200), " +
-                "fromuser varchar(30)," +
-                " sendtime Integer," +
-                " isme Integer)");
+
     }
 
     @Override
