@@ -2,11 +2,13 @@ package com.xieyangzhe.meetim.Utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.xieyangzhe.meetim.Activities.ChatActivity;
 import com.xieyangzhe.meetim.Models.ChatMessage;
 import com.xieyangzhe.meetim.Models.ChatMessageList;
 import com.xieyangzhe.meetim.Models.Contact;
@@ -37,14 +39,13 @@ public class XMPPTool extends XMPPTCPConnection {
 
     private static XMPPTool xmppTool;
 
-    public final static String MESSAGE_RECEIVER = "com.xieyangzhe.meetim.MESSAGE";
     private final static String SERVER_NAME = "xmpp.xieyangzhe.com";
     private final static String SERVER_IP = "39.105.73.30";
     private final static int PORT_NUMBER = 5222;
     private final static int TIME_OUT = 6000;
     private static String currentUserName;
 
-    private static ChatManager chatManager;
+    public static ChatManager chatManager;
 
     private XMPPTool(XMPPTCPConnectionConfiguration config) {
         super(config);
@@ -77,31 +78,6 @@ public class XMPPTool extends XMPPTCPConnection {
 
     private void initChatManager() {
         chatManager = ChatManager.getInstanceFor(getXmppTool());
-        chatManager.addChatListener(new ChatManagerListener() {
-            @Override
-            public void chatCreated(Chat chat, boolean createdLocally) {
-                if (!createdLocally) {
-                    chat.addMessageListener(new ChatMessageListener() {
-                        @Override
-                        public void processMessage(Chat chat, Message message) {
-                            //TODO: Process message
-                            Log.d("CHAT", message.toString());
-                            DBTool dbTool = new DBTool();
-                            ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false);
-                            dbTool.addSingleMessage(chatMessage, message.getFrom().replaceAll("@39.105.73.30/Android", ""));
-
-                            NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
-                            notificationUtils.sendNotification(message.getFrom().replaceAll("@39.105.73.30/Android", ""), message.getBody());
-
-                            Intent intent = new Intent(MESSAGE_RECEIVER);
-                            intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/Android", ""));
-                            intent.putExtra("FROM_MSG_BODY", message.getBody());
-                            IMApplication.getAppContext().sendBroadcast(intent);
-                        }
-                    });
-                }
-            }
-        });
     }
 
     public static String getCurrentUserName() {

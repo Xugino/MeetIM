@@ -31,7 +31,7 @@ public class WelcomeActivity extends AppCompatActivity {
         buttonSend = findViewById(R.id.button_send);
         buttonTest.setOnClickListener(view -> {
             NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
-            notificationUtils.sendNotification("测试标题", "测试内容");
+            notificationUtils.sendNotification("测试标题", "测试内容", null);
         });
 
         buttonSend.setOnClickListener(view -> {

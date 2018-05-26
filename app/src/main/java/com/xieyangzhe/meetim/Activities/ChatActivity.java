@@ -17,6 +17,7 @@ import com.xieyangzhe.meetim.Models.ChatMessage;
 import com.xieyangzhe.meetim.Models.ChatMessageList;
 import com.xieyangzhe.meetim.Models.Contact;
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Services.XMPPService;
 import com.xieyangzhe.meetim.Utils.DBTool;
 import com.xieyangzhe.meetim.Utils.TimeFormatter;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
@@ -53,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
         );
+        Log.d("PPPPPPPPP", you.getJid() + " " + you.getName());
+
         me = new Contact ("", XMPPTool.getCurrentUserName(), "");
 
         loadMessages();
@@ -110,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         };
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(XMPPTool.MESSAGE_RECEIVER);
+        intentFilter.addAction(XMPPService.MESSAGE_RECEIVER);
         registerReceiver(broadcastReceiver, intentFilter);
     }
 
