@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
                             .setText(fromMsgBody)
                             .build();
                     chatView.receive(messageYou);
-                    saveMessage(messageYou);
+                    //saveMessage(messageYou);
                 }
             }
         };
@@ -142,6 +142,7 @@ public class ChatActivity extends AppCompatActivity {
                     .setUser(message.isRight()?me:you)
                     .setRight(message.isRight())
                     .setText(message.getText())
+                    .setSendTime(message.getSendTime())
                     .build();
             savedMessages.add(newMessage);
         }

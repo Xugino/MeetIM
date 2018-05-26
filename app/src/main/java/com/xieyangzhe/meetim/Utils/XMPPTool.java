@@ -1,12 +1,16 @@
 package com.xieyangzhe.meetim.Utils;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.xieyangzhe.meetim.Models.ChatMessage;
+import com.xieyangzhe.meetim.Models.ChatMessageList;
 import com.xieyangzhe.meetim.Models.Contact;
+import com.xieyangzhe.meetim.R;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ReconnectionManager;
@@ -22,6 +26,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -81,8 +86,19 @@ public class XMPPTool extends XMPPTCPConnection {
                         public void processMessage(Chat chat, Message message) {
                             //TODO: Process message
                             Log.d("CHAT", message.toString());
+                            DBTool dbTool = new DBTool();
+                            ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false);
+                            dbTool.addSingleMessage(chatMessage, message.getFrom().replaceAll("@39.105.73.30/Android", ""));
+
+                            NotificationManager notificationManager= (NotificationManager) IMApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                            Notification notification = new Notification.Builder(IMApplication.getAppContext())
+                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setContentTitle(message.getFrom().replaceAll("/Android", ""))
+                                    .setContentText(message.getBody())
+                                    .build();
+                            notificationManager.notify(0, notification);
                             Intent intent = new Intent(MESSAGE_RECEIVER);
-                            intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/mobile", ""));
+                            intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/Android", ""));
                             intent.putExtra("FROM_MSG_BODY", message.getBody());
                             IMApplication.getAppContext().sendBroadcast(intent);
                         }
@@ -202,7 +218,7 @@ public class XMPPTool extends XMPPTCPConnection {
             checkConnection();
             checkLogin();
             Roster roster = Roster.getInstanceFor(getXmppTool());
-            roster.createEntry(username + SERVER_IP, username, null);
+            roster.createEntry(username + "@" + SERVER_IP, username, null);
         } catch (Exception e) {
             Log.d("ERROR", "addContact: " + e.getMessage());
         }
