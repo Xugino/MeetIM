@@ -90,13 +90,9 @@ public class XMPPTool extends XMPPTCPConnection {
                             ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false);
                             dbTool.addSingleMessage(chatMessage, message.getFrom().replaceAll("@39.105.73.30/Android", ""));
 
-                            NotificationManager notificationManager= (NotificationManager) IMApplication.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                            Notification notification = new Notification.Builder(IMApplication.getAppContext())
-                                    .setSmallIcon(R.drawable.ic_launcher)
-                                    .setContentTitle(message.getFrom().replaceAll("/Android", ""))
-                                    .setContentText(message.getBody())
-                                    .build();
-                            notificationManager.notify(0, notification);
+                            NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
+                            notificationUtils.sendNotification(message.getFrom().replaceAll("@39.105.73.30/Android", ""), message.getBody());
+
                             Intent intent = new Intent(MESSAGE_RECEIVER);
                             intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/Android", ""));
                             intent.putExtra("FROM_MSG_BODY", message.getBody());

@@ -1,12 +1,16 @@
 package com.xieyangzhe.meetim.Services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import com.xieyangzhe.meetim.R;
 import com.xieyangzhe.meetim.Utils.IMApplication;
 import com.xieyangzhe.meetim.Utils.PreferencesUtils;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
@@ -56,6 +60,7 @@ public class XMPPService extends Service {
                     Looper.prepare();
                     xmppHandler = new Handler();
                     initXMPPTool();
+
                     intent.putExtra(LOGIN_STATUS, XMPPTool.getLoginStatus());
                     sendBroadcast(intent);
                     Looper.loop();
