@@ -64,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
 
         buttonLogin.setOnClickListener(view -> {
                 attemptLogin();
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(XMPPService.LOGIN_RECEIVER);
+                registerReceiver(receiver, intentFilter);
         });
 
         textRegister.setOnClickListener(view -> {
@@ -84,10 +87,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(XMPPService.LOGIN_RECEIVER);
-        registerReceiver(receiver, intentFilter);
     }
 
     private void attemptLogin() {

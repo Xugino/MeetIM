@@ -160,8 +160,13 @@ public class XMPPTool extends XMPPTCPConnection {
 
     public List<Contact> getContactList() {
         List<Contact> contactList = new ArrayList<>();
+        String name;
         for (RosterEntry entry : Roster.getInstanceFor(getXmppTool()).getEntries()) {
-            Contact contact = new Contact(entry.getUser(), entry.getName(), "");
+            name = entry.getName();
+            if (name == null) {
+                name = entry.getUser().replace("@39.105.73.30", "");
+            }
+            Contact contact = new Contact(entry.getUser(), name, "");
             contactList.add(contact);
         }
         return contactList;

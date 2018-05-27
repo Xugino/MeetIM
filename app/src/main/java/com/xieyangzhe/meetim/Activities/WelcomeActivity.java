@@ -29,18 +29,26 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        /*
-        if (((String) PreferencesUtils.getInstance().getData("username", "null")).length() >= 4
-                && ((String) PreferencesUtils.getInstance().getData("username", "null")).length() >= 4) {
-            startService(new Intent(WelcomeActivity.this, XMPPService.class));
-            if (!XMPPTool.getLoginStatus()) {
-                stopService(new Intent(WelcomeActivity.this, XMPPService.class));
-                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-            } else {
-                startActivity(new Intent(this, MainActivity.class));
-            }
+        if (((String) PreferencesUtils.getInstance().getData("username", "")).length() >= 4
+                && ((String) PreferencesUtils.getInstance().getData("username", "")).length() >= 4) {
+            startService(new Intent(this, XMPPService.class));
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1500);
+                    if (!XMPPTool.getLoginStatus()) {
+                        stopService(new Intent(this, XMPPService.class));
+                        startActivity(new Intent(this, LoginActivity.class));
+                    } else {
+                        startActivity(new Intent(this, MainActivity.class));
+                    }
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+
         }
-        */
 
         buttonTest = findViewById(R.id.button_test);
         buttonSend = findViewById(R.id.button_send);
