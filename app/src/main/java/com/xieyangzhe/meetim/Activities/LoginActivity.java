@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+
         textUsername = findViewById(R.id.username);
         buttonLogin = findViewById(R.id.sign_in_button);
         textPassword = findViewById(R.id.password);
@@ -111,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (XMPPTool.getLoginStatus()) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
         } else {
             startService(new Intent(this, XMPPService.class));
         }

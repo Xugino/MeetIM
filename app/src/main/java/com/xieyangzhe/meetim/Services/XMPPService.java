@@ -38,8 +38,6 @@ public class XMPPService extends Service {
     private Thread xmppThread;
     private Handler xmppHandler;
 
-    BroadcastReceiver broadcastReceiver;
-
     public static final String LOGIN_RECEIVER = "com.xieyangzhe.meetim.RECEIVER";
     public static final String LOGIN_STATUS = "com.xieyangzhe.meetim.LOGIN_STATUS";
     public final static String MESSAGE_RECEIVER = "com.xieyangzhe.meetim.MESSAGE";
@@ -68,9 +66,7 @@ public class XMPPService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
         stop();
-
     }
 
     public void start() {
