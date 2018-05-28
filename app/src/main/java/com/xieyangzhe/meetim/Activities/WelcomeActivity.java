@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.xieyangzhe.meetim.R;
@@ -22,11 +24,14 @@ import com.xieyangzhe.meetim.Utils.PreferencesUtils;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
 
 public class WelcomeActivity extends AppCompatActivity {
-    Button buttonTest;
-    Button buttonSend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
         setContentView(R.layout.activity_welcome);
 
         if (((String) PreferencesUtils.getInstance().getData("username", "")).length() >= 4
@@ -34,7 +39,7 @@ public class WelcomeActivity extends AppCompatActivity {
             startService(new Intent(this, XMPPService.class));
             new Thread(() -> {
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(1000);
                     if (!XMPPTool.getLoginStatus()) {
                         stopService(new Intent(this, XMPPService.class));
                         startActivity(new Intent(this, LoginActivity.class));
@@ -49,16 +54,5 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
         }
-
-        buttonTest = findViewById(R.id.button_test);
-        buttonSend = findViewById(R.id.button_send);
-        buttonTest.setOnClickListener(view -> {
-            NotificationTool notificationUtils = new NotificationTool(IMApplication.getAppContext());
-            notificationUtils.sendNotification("测试标题", "测试内容", null);
-        });
-
-        buttonSend.setOnClickListener(view -> {
-                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-        });
     }
 }
