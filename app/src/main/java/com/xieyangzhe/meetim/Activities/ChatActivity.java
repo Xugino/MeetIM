@@ -75,6 +75,9 @@ public class ChatActivity extends AppCompatActivity {
 
 
             String msgText = chatView.getInputText();
+            if (msgText.equals("")) {
+                return;
+            }
 
             doSendMessage(msgText, you);
 

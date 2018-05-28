@@ -51,7 +51,16 @@ public class WelcomeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }).start();
-
+        } else {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
 
         }
     }
