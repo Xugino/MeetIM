@@ -22,6 +22,8 @@ import com.xieyangzhe.meetim.Utils.ActivityLifecycleListener;
 import com.xieyangzhe.meetim.Utils.DBTool;
 import com.xieyangzhe.meetim.Utils.IMApplication;
 import com.xieyangzhe.meetim.Utils.NotificationTool;
+import com.xieyangzhe.meetim.Utils.OkHttp3Util;
+import com.xieyangzhe.meetim.Utils.PictureTool;
 import com.xieyangzhe.meetim.Utils.PreferencesUtils;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
 
@@ -110,7 +112,15 @@ public class XMPPService extends Service {
                                     //TODO: Process message
                                     Log.d("CHAT", message.toString());
                                     DBTool dbTool = new DBTool();
-                                    ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false, false);
+
+                                    ChatMessage chatMessage;
+                                    if (message.getBody().contains("http://") && message.getBody().contains(".png")) {
+                                        PictureTool.downloadPic(message.getBody());
+                                        chatMessage = new ChatMessage(OkHttp3Util.getNameFromUrl(message.getBody()), message.getFrom(), Calendar.getInstance(), false, true);
+                                    } else {
+                                        chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false, false);
+                                    }
+
                                     dbTool.addSingleMessage(chatMessage, message.getFrom().replaceAll("@39.105.73.30/Android", ""));
 
                                     String username = message.getFrom().replaceAll("@39.105.73.30/Android", "");

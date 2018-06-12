@@ -26,6 +26,7 @@ import com.xieyangzhe.meetim.R;
 import com.xieyangzhe.meetim.Services.XMPPService;
 import com.xieyangzhe.meetim.Utils.BitmapAndStringUtils;
 import com.xieyangzhe.meetim.Utils.DBTool;
+import com.xieyangzhe.meetim.Utils.OkHttp3Util;
 import com.xieyangzhe.meetim.Utils.PictureTool;
 import com.xieyangzhe.meetim.Utils.TimeFormatter;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
@@ -37,6 +38,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ChatView chatView;
     private BroadcastReceiver broadcastReceiver;
+    private BroadcastReceiver uploadReceiver;
     private Contact you;
     private Contact me;
     private ChatMessageList messageList;
@@ -53,15 +55,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-        String[] PERMISSIONS = {
-                "android.permission.READ_EXTERNAL_STORAGE",
-                "android.permission.WRITE_EXTERNAL_STORAGE" };
-        int permission = ContextCompat.checkSelfPermission(this,
-                "android.permission.WRITE_EXTERNAL_STORAGE");
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, PERMISSIONS,1);
-        }
 
         dbTool = new DBTool();
         chatView = findViewById(R.id.chat_view);
@@ -86,6 +79,18 @@ public class ChatActivity extends AppCompatActivity {
         chatView.setMaxInputLine(5);
         chatView.setUsernameFontSize(getResources().getDimension(R.dimen.font_small));
         chatView.setAutoHidingKeyboard(false);
+
+
+        uploadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String path = "http://img.xieyangzhe.com/img/" + intent.getStringExtra("filename");
+                doSendMessage(path, you);
+            }
+        };
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addAction(PictureTool.UPLOAD_SUCCESS);
+        registerReceiver(uploadReceiver, intentFilter1);
 
         chatView.setOnClickSendButtonListener(view -> {
 
@@ -122,14 +127,27 @@ public class ChatActivity extends AppCompatActivity {
                 String fromUsername = intent.getStringExtra("FROM_USERNAME");
                 String fromMsgBody = intent.getStringExtra("FROM_MSG_BODY");
 
+
                 if (fromUsername.equals(you.getJid())) {
-                    Message messageYou = new Message.Builder()
-                            .setUser(you)
-                            .setRight(false)
-                            .setText(fromMsgBody)
-                            .build();
+                    Message messageYou;
+                    if (fromMsgBody.contains("http://") && fromMsgBody.contains(".png")) {
+                        String path =  PictureTool.DIR + OkHttp3Util.getNameFromUrl(fromMsgBody);
+                        Log.d("asdasd", path);
+                        messageYou = new Message.Builder()
+                                .setUser(you)
+                                .setRight(false)
+                                .setText(fromMsgBody)
+                                .setType(Message.Type.PICTURE)
+                                .setPicture(PictureTool.getPic(path))
+                                .build();
+                    } else {
+                        messageYou = new Message.Builder()
+                                .setUser(you)
+                                .setRight(false)
+                                .setText(fromMsgBody)
+                                .build();
+                    }
                     chatView.receive(messageYou);
-                    //saveMessage(messageYou);
                 }
             }
         };
@@ -150,18 +168,20 @@ public class ChatActivity extends AppCompatActivity {
             } catch (Exception e) {
                 return;
             }
-            String path = PictureTool.savePic(bitmap);
-            doSendMessage(path, you);
+            String filename = PictureTool.savePic(bitmap);
+            PictureTool.uploadPic(bitmap, filename);
 
             Message message = new Message.Builder()
                     .setUser(me)
                     .setRight(true)
                     .setType(Message.Type.PICTURE)
                     .setPicture(bitmap)
+                    .setText(filename)
                     .build();
             chatView.send(message);
             messageList.add(message);
             saveMessage(message);
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -174,6 +194,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(uploadReceiver);
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }

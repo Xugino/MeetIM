@@ -1,7 +1,11 @@
 package com.xieyangzhe.meetim.Models;
 
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import com.github.bassaer.chatmessageview.model.Message;
 import com.xieyangzhe.meetim.Utils.BitmapAndStringUtils;
+import com.xieyangzhe.meetim.Utils.PictureTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +55,7 @@ public class ChatMessageList {
         ChatMessage chatMessage;
         if (message.getType() == Message.Type.PICTURE) {
             chatMessage = new ChatMessage(
-                    BitmapAndStringUtils.convertIconToString(message.getPicture()),
+                    message.getText(),
                     message.getUser().getName(),
                     message.getSendTime(),
                     message.isRight(),
@@ -71,11 +75,12 @@ public class ChatMessageList {
         Contact contact = new Contact("", chatMessage.getUsername(), "");
         Message message;
         if (chatMessage.isPic()) {
+            Log.d("asdasdasd", "convertToMessage: " + PictureTool.DIR + chatMessage.getMsgBody());
             message = new Message.Builder()
                     .setUser(contact)
                     .setRight(chatMessage.isMe())
                     .setType(Message.Type.PICTURE)
-                    .setPicture(BitmapAndStringUtils.convertStringToIcon(chatMessage.getMsgBody()))
+                    .setPicture(BitmapFactory.decodeFile(PictureTool.DIR + chatMessage.getMsgBody()))
                     .setSendTime(chatMessage.getMsgTime())
                     .build();
         } else {
