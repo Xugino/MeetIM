@@ -110,7 +110,7 @@ public class XMPPService extends Service {
                                     //TODO: Process message
                                     Log.d("CHAT", message.toString());
                                     DBTool dbTool = new DBTool();
-                                    ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false);
+                                    ChatMessage chatMessage = new ChatMessage(message.getBody(), message.getFrom(), Calendar.getInstance(), false, false);
                                     dbTool.addSingleMessage(chatMessage, message.getFrom().replaceAll("@39.105.73.30/Android", ""));
 
                                     String username = message.getFrom().replaceAll("@39.105.73.30/Android", "");

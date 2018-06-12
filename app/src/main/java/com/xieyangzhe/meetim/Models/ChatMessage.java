@@ -16,12 +16,14 @@ public class ChatMessage {
     private String username;
     private Calendar msgTime;
     private boolean isMe;
+    private boolean isPic;
 
-    public ChatMessage(String msgBody, String username, Calendar msgTime, boolean isMe) {
+    public ChatMessage(String msgBody, String username, Calendar msgTime, boolean isMe, boolean isPic) {
         this.msgBody = msgBody;
         this.username = username;
         this.msgTime = msgTime;
         this.isMe = isMe;
+        this.isPic = isPic;
     }
 
     public String getMsgBody() {
@@ -54,5 +56,13 @@ public class ChatMessage {
 
     public void setMe(boolean me) {
         isMe = me;
+    }
+
+    public boolean isPic() {
+        return isPic;
+    }
+
+    public void setPic(boolean pic) {
+        isPic = pic;
     }
 }

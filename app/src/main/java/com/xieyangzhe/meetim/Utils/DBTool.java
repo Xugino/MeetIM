@@ -29,10 +29,11 @@ public class DBTool {
         //Log.d("INFO", "addSingleMessage: " + username);
         db.execSQL("create table if not exists " + username +
                 "(id integer primary key autoincrement, " +
-                "content varcahr(200), " +
+                "content varcahr(1024), " +
                 "fromuser varchar(30)," +
                 " sendtime Integer," +
-                " isme Integer)"
+                " isme Integer," +
+                "type Integer)"
         );
 
         ContentValues values = new ContentValues();
@@ -40,6 +41,7 @@ public class DBTool {
         values.put("fromuser", chatMessage.getUsername());
         values.put("sendtime", chatMessage.getMsgTime().getTime().getTime());
         values.put("isme", chatMessage.isMe() ? 1 : 0);
+        values.put("type", chatMessage.isPic() ? 1 : 0);
         db.insert(username, null, values);
         db.close();
     }
@@ -56,12 +58,14 @@ public class DBTool {
 
         if (cursor.moveToFirst()) {
             do {
+
                 String content = cursor.getString(cursor.getColumnIndex("content"));
                 String fromuser = cursor.getString(cursor.getColumnIndex("fromuser"));
                 Calendar sendtime = Calendar.getInstance();
                 sendtime.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("sendtime")));
                 boolean isme = (cursor.getInt(cursor.getColumnIndex("isme")) == 1) ? true : false;
-                chatMessageList.addChatMessage(new ChatMessage(content, fromuser, sendtime, isme));
+                boolean isPic = (cursor.getInt(cursor.getColumnIndex("type")) == 1) ? true : false;
+                chatMessageList.addChatMessage(new ChatMessage(content, fromuser, sendtime, isme, isPic));
             } while (cursor.moveToNext());
         }
         db.close();

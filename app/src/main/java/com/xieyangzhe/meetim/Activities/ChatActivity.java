@@ -1,10 +1,16 @@
 package com.xieyangzhe.meetim.Activities;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +24,9 @@ import com.xieyangzhe.meetim.Models.ChatMessageList;
 import com.xieyangzhe.meetim.Models.Contact;
 import com.xieyangzhe.meetim.R;
 import com.xieyangzhe.meetim.Services.XMPPService;
+import com.xieyangzhe.meetim.Utils.BitmapAndStringUtils;
 import com.xieyangzhe.meetim.Utils.DBTool;
+import com.xieyangzhe.meetim.Utils.PictureTool;
 import com.xieyangzhe.meetim.Utils.TimeFormatter;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
 
@@ -46,6 +54,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        String[] PERMISSIONS = {
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.WRITE_EXTERNAL_STORAGE" };
+        int permission = ContextCompat.checkSelfPermission(this,
+                "android.permission.WRITE_EXTERNAL_STORAGE");
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS,1);
+        }
+
         dbTool = new DBTool();
         chatView = findViewById(R.id.chat_view);
 
@@ -55,7 +72,6 @@ public class ChatActivity extends AppCompatActivity {
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
         );
-        //Log.d("PPPPPPPPP", you.getJid() + " " + you.getName());
 
         me = new Contact ("", XMPPTool.getCurrentUserName(), "");
 
@@ -123,6 +139,33 @@ public class ChatActivity extends AppCompatActivity {
         registerReceiver(broadcastReceiver, intentFilter);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PHOTO_REQUEST_GALLERY) {
+            Uri uri = data.getData();
+            ContentResolver contentResolver = getContentResolver();
+            Bitmap bitmap;
+            try {
+                bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
+            } catch (Exception e) {
+                return;
+            }
+            String path = PictureTool.savePic(bitmap);
+            doSendMessage(path, you);
+
+            Message message = new Message.Builder()
+                    .setUser(me)
+                    .setRight(true)
+                    .setType(Message.Type.PICTURE)
+                    .setPicture(bitmap)
+                    .build();
+            chatView.send(message);
+            messageList.add(message);
+            saveMessage(message);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void doSendMessage(String msgText, Contact you) {
         new Thread(() -> {
             XMPPTool.getXmppTool().sendMessage(msgText, you);
@@ -147,12 +190,24 @@ public class ChatActivity extends AppCompatActivity {
         messages = messageList.getMessages();
 
         for (Message message: messages) {
-            Message newMessage = new Message.Builder()
-                    .setUser(message.isRight()?me:you)
-                    .setRight(message.isRight())
-                    .setText(message.getText())
-                    .setSendTime(message.getSendTime())
-                    .build();
+            Message newMessage;
+            if (message.getType() == Message.Type.PICTURE) {
+                newMessage = new Message.Builder()
+                        .setUser(message.isRight()?me:you)
+                        .setRight(message.isRight())
+                        .setType(Message.Type.PICTURE)
+                        .setPicture(message.getPicture())
+                        .setSendTime(message.getSendTime())
+                        .build();
+            } else {
+                newMessage = new Message.Builder()
+                        .setUser(message.isRight()?me:you)
+                        .setRight(message.isRight())
+                        .setText(message.getText())
+                        .setSendTime(message.getSendTime())
+                        .build();
+            }
+
             savedMessages.add(newMessage);
         }
         MessageView messageView = chatView.getMessageView();

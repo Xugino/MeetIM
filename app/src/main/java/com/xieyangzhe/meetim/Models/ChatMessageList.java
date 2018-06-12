@@ -1,6 +1,7 @@
 package com.xieyangzhe.meetim.Models;
 
 import com.github.bassaer.chatmessageview.model.Message;
+import com.xieyangzhe.meetim.Utils.BitmapAndStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,22 +48,44 @@ public class ChatMessageList {
     }
 
     public ChatMessage convertToChatMessage(Message message) {
-        ChatMessage chatMessage = new ChatMessage(
-                message.getText(),
-                message.getUser().getName(),
-                message.getSendTime(),
-                message.isRight());
+        ChatMessage chatMessage;
+        if (message.getType() == Message.Type.PICTURE) {
+            chatMessage = new ChatMessage(
+                    BitmapAndStringUtils.convertIconToString(message.getPicture()),
+                    message.getUser().getName(),
+                    message.getSendTime(),
+                    message.isRight(),
+                    true);
+        } else {
+            chatMessage = new ChatMessage(
+                    message.getText(),
+                    message.getUser().getName(),
+                    message.getSendTime(),
+                    message.isRight(),
+                    false);
+        }
         return chatMessage;
     }
 
     public Message convertToMessage(ChatMessage chatMessage) {
         Contact contact = new Contact("", chatMessage.getUsername(), "");
-        Message message = new Message.Builder()
-                .setUser(contact)
-                .setRight(chatMessage.isMe())
-                .setText(chatMessage.getMsgBody())
-                .setSendTime(chatMessage.getMsgTime())
-                .build();
+        Message message;
+        if (chatMessage.isPic()) {
+            message = new Message.Builder()
+                    .setUser(contact)
+                    .setRight(chatMessage.isMe())
+                    .setType(Message.Type.PICTURE)
+                    .setPicture(BitmapAndStringUtils.convertStringToIcon(chatMessage.getMsgBody()))
+                    .setSendTime(chatMessage.getMsgTime())
+                    .build();
+        } else {
+            message = new Message.Builder()
+                    .setUser(contact)
+                    .setRight(chatMessage.isMe())
+                    .setText(chatMessage.getMsgBody())
+                    .setSendTime(chatMessage.getMsgTime())
+                    .build();
+        }
         message.setIconVisibility(true);
         message.hideIcon(false);
         return message;
