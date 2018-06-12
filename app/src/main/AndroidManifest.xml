@@ -16,9 +16,9 @@
         android:roundIcon="@mipmap/main_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-
+        <activity
+            android:name=".Activities.WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,9 +39,14 @@
             android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.ChatActivity"
+        <activity
+            android:name=".Activities.ChatActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".Activities.AddContactActivity"></activity>
+        <activity android:name=".Activities.AddContactActivity" />
+        <activity
+            android:name=".Activities.TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

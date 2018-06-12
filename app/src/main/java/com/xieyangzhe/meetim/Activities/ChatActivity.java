@@ -39,6 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     protected static final int OPTION_BUTTON_COLOR = R.color.teal500;
     protected static final String INPUT_TEXT_HINT = "New message..";
     protected static final int MESSAGE_MARGIN = 5;
+    private static final int PHOTO_REQUEST_GALLERY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
         );
-        Log.d("PPPPPPPPP", you.getJid() + " " + you.getName());
+        //Log.d("PPPPPPPPP", you.getJid() + " " + you.getName());
 
         me = new Contact ("", XMPPTool.getCurrentUserName(), "");
 
@@ -62,7 +63,6 @@ public class ChatActivity extends AppCompatActivity {
 
         chatView.setBackgroundColor(ContextCompat.getColor(this, BACKGROUND_COLOR));
         chatView.setSendButtonColor(ContextCompat.getColor(this, SEND_BUTTON_COLOR));
-        chatView.setOptionIcon(R.drawable.ic_account_circle);
         chatView.setOptionButtonColor(OPTION_BUTTON_COLOR);
         chatView.setInputTextHint(INPUT_TEXT_HINT);
         chatView.setMessageMarginTop(MESSAGE_MARGIN);
@@ -95,6 +95,9 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         chatView.setOnClickOptionButtonListener(view -> {
+            Intent intent1 = new Intent(Intent.ACTION_PICK);
+            intent1.setType("image/*");
+            startActivityForResult(intent1, PHOTO_REQUEST_GALLERY);
         });
 
         broadcastReceiver = new BroadcastReceiver() {

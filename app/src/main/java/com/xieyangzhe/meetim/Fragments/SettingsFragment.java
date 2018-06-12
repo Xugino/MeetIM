@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.xieyangzhe.meetim.Activities.LoginActivity;
+import com.xieyangzhe.meetim.Activities.MainActivity;
+import com.xieyangzhe.meetim.Activities.TestActivity;
 import com.xieyangzhe.meetim.R;
 import com.xieyangzhe.meetim.Services.XMPPService;
 import com.xieyangzhe.meetim.Utils.PreferencesUtils;
@@ -40,6 +42,11 @@ public class SettingsFragment extends Fragment {
             PreferencesUtils.getInstance().saveData("password", "");
             getActivity().startActivity(new Intent(getContext(), LoginActivity.class));
             getActivity().finish();
+        });
+
+        Button test = view.findViewById(R.id.test_img);
+        test.setOnClickListener(view -> {
+            startActivity(new Intent(getActivity(), TestActivity.class));
         });
         return view;
 
