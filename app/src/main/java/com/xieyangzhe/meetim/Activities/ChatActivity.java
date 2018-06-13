@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ import com.xieyangzhe.meetim.Utils.PictureTool;
 import com.xieyangzhe.meetim.Utils.TimeFormatter;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,27 +162,48 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PHOTO_REQUEST_GALLERY) {
-            Uri uri = data.getData();
-            ContentResolver contentResolver = getContentResolver();
-            Bitmap bitmap;
-            try {
-                bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri));
-            } catch (Exception e) {
-                return;
-            }
-            String filename = PictureTool.savePic(bitmap);
-            PictureTool.uploadPic(bitmap, filename);
 
-            Message message = new Message.Builder()
-                    .setUser(me)
-                    .setRight(true)
-                    .setType(Message.Type.PICTURE)
-                    .setPicture(bitmap)
-                    .setText(filename)
-                    .build();
-            chatView.send(message);
-            messageList.add(message);
-            saveMessage(message);
+            Handler handler = new Handler() {
+                @Override
+                public void handleMessage(android.os.Message msg) {
+                    switch (msg.what) {
+                        case 0:
+                            Bitmap bitmap = (Bitmap) msg.obj;
+                            String filename = msg.getData().getString("filename");
+                            Message message = new Message.Builder()
+                                    .setUser(me)
+                                    .setRight(true)
+                                    .setType(Message.Type.PICTURE)
+                                    .setPicture(bitmap)
+                                    .setText(filename)
+                                    .build();
+                            chatView.send(message);
+                            messageList.add(message);
+                            saveMessage(message);
+                            break;
+                    }
+                }
+            };
+            new Thread(() -> {
+                try {
+                    Uri uri = data.getData();
+                    ContentResolver contentResolver = getContentResolver();
+                    Bitmap tmpbitmap = PictureTool.getCompresedImage(uri.getPath().replace("/raw/", ""));
+                    //Bitmap tmpbitmap = PictureTool.compressImage(BitmapFactory.decodeStream(contentResolver.openInputStream(uri)));
+                    String tmpfilename = PictureTool.savePic(tmpbitmap);
+                    PictureTool.uploadPic(tmpbitmap, tmpfilename);
+                    android.os.Message msg = new android.os.Message();
+                    msg.what = 0;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("filename", tmpfilename);
+                    msg.setData(bundle);
+                    msg.obj = tmpbitmap;
+
+                    handler.sendMessage(msg);
+                } catch (Exception e) {
+                    Log.d("Error", "onActivityResult: " + e.getMessage());
+                }
+            }).start();
 
         }
         super.onActivityResult(requestCode, resultCode, data);

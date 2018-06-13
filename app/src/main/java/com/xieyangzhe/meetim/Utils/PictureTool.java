@@ -6,20 +6,15 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
-import com.xieyangzhe.meetim.Activities.TestActivity;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.UUID;
 
-import java.net.URL;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 /**
@@ -83,7 +78,6 @@ public class PictureTool {
     static private File convertBitmapToFile(Bitmap bitmap) {
         File f;
         try {
-            // create a file to write bitmap data
             f = new File(IMApplication.getAppContext().getCacheDir(), "images");
             f.createNewFile();
 
@@ -99,5 +93,23 @@ public class PictureTool {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static Bitmap getCompresedImage(String imagePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+        int height = options.outHeight;
+        int width= options.outWidth;
+        int inSampleSize = 2;
+        int minLen = Math.min(height, width); // 原图的最小边长
+        if(minLen > 200) {
+            float ratio = (float)minLen / 300.0f;
+            inSampleSize = (int)ratio;
+        }
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = inSampleSize;
+        Bitmap bm = BitmapFactory.decodeFile(imagePath, options);
+        return bm;
     }
 }
