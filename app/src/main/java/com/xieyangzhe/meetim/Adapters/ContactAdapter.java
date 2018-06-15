@@ -52,12 +52,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Contact contact = contactList.get(position);
-        holder.imageHead.setImageResource(R.mipmap.ic_launcher);
+        holder.imageHead.setImageResource(R.drawable.ic_user);
         holder.textContactName.setText(contact.getName());
         holder.content.setOnClickListener(view -> {
             Intent intent = new Intent(context, ChatActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("JID_TO", contactList.get(position).getJid());
+            bundle.putString("J" +
+                    "ID_TO", contactList.get(position).getJid());
             bundle.putString("USERNAME_TO", contactList.get(position).getName());
             bundle.putString("HEAD_TO", contactList.get(position).getHead());
             intent.putExtras(bundle);

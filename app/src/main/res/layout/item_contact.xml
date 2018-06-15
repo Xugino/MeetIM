@@ -17,7 +17,7 @@
             android:id="@+id/head_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            tools:src="@mipmap/ic_launcher" />
+            tools:src="@drawable/baseline_person_24" />
 
         <TextView
             android:text="Joseph"

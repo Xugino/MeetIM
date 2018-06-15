@@ -67,7 +67,6 @@ public class PictureTool {
     }
 
     public static void downloadPic(String url) {
-
        OkHttp3Util.download(url, DIR);
     }
 
@@ -103,7 +102,7 @@ public class PictureTool {
         int width= options.outWidth;
         int inSampleSize = 2;
         int minLen = Math.min(height, width); // 原图的最小边长
-        if(minLen > 200) {
+        if(minLen > 300) {
             float ratio = (float)minLen / 300.0f;
             inSampleSize = (int)ratio;
         }

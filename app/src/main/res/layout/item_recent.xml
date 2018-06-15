@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="15dp"
+    app:ios="false">
+    <LinearLayout
+        android:id="@+id/recent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent" >
+
+        <ImageView
+            android:id="@+id/recent_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            tools:src="@drawable/baseline_person_24" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Joseph"
+                    android:id="@+id/recent_name"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/recent_time"
+                    android:paddingRight="15dp"
+                    android:text="10:00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/recent_message"
+                android:text="message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/recent_delete"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:background="#FF0000"
+        android:clickable="true"
+        android:text="Delete"
+        android:textColor="@android:color/white" />
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+
