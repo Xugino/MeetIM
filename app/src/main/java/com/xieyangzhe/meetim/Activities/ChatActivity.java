@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
             Message newMessage;
             if (message.getType() == Message.Type.PICTURE) {
                 newMessage = new Message.Builder()
-                        .setUser(message.isRight()?me:you)
+                        .setUser(message.isRight() ? me : you)
                         .setRight(message.isRight())
                         .setType(Message.Type.PICTURE)
                         .setPicture(message.getPicture())
@@ -245,7 +245,7 @@ public class ChatActivity extends AppCompatActivity {
                         .build();
             } else {
                 newMessage = new Message.Builder()
-                        .setUser(message.isRight()?me:you)
+                        .setUser(message.isRight() ? me : you)
                         .setRight(message.isRight())
                         .setText(message.getText())
                         .setSendTime(message.getSendTime())
