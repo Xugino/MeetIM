@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Fragment curFragment;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         XMPPTool.getXmppTool().getContactList();
 
         String[] PERMISSIONS = {
+                "android.permission.INTERNET",
                 "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.WRITE_EXTERNAL_STORAGE" };
         int permission = ContextCompat.checkSelfPermission(this,
@@ -46,14 +48,14 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, PERMISSIONS,1);
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Contacts");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //XMPPTool.getXmppTool().addContact("test2");
                 startActivity(new Intent(MainActivity.this, AddContactActivity.class));
             }
         });
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -85,19 +87,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -108,22 +105,25 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment;
 
         switch (id) {
             case R.id.nav_chats:
                 fragment = new ChatListFragment();
+                toolbar.setTitle("Chats");
                 break;
             case R.id.nav_contacts:
                 fragment = new ContactListFragment();
+                toolbar.setTitle("Contacts");
                 break;
             case R.id.nav_me:
                 fragment = new SettingsFragment();
+                toolbar.setTitle("Settings");
                 break;
             default:
                 fragment = new ContactListFragment();
+                toolbar.setTitle("Contacts");
                 break;
         }
 

@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.github.bassaer.chatmessageview.model.Message;
@@ -46,6 +47,8 @@ public class ChatActivity extends AppCompatActivity {
     private ChatMessageList messageList;
     private DBTool dbTool;
 
+    private Toolbar toolbar;
+
     protected static final int BACKGROUND_COLOR = R.color.gray200;
     protected static final int SEND_BUTTON_COLOR = R.color.blueGray500;
     protected static final int OPTION_BUTTON_COLOR = R.color.teal500;
@@ -67,6 +70,14 @@ public class ChatActivity extends AppCompatActivity {
                 bundle.getString("USERNAME_TO"),
                 bundle.getString("HEAD_TO")
         );
+
+        toolbar = findViewById(R.id.toolbar_chat);
+        toolbar.setTitle(you.getName());
+
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> {
+            finish();
+        });
 
         me = new Contact ("", XMPPTool.getCurrentUserName(), "");
 

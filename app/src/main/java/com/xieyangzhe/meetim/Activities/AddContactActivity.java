@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.xieyangzhe.meetim.R;
 import com.xieyangzhe.meetim.Utils.XMPPTool;
@@ -18,6 +19,7 @@ public class AddContactActivity extends AppCompatActivity {
 
     private EditText textAddContact;
     private Button buttonAddContact;
+    private Toolbar toolbar;
 
     private Handler handler = new Handler() {
         @Override
@@ -48,6 +50,14 @@ public class AddContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
+
+        toolbar = findViewById(R.id.toolbar_chat);
+        toolbar.setTitle("Add Contact");
+
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> {
+            finish();
+        });
 
         textAddContact = findViewById(R.id.text_add_contact);
         buttonAddContact = findViewById(R.id.button_add_contact);

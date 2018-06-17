@@ -8,6 +8,11 @@
 
     tools:context="com.xieyangzhe.meetim.Activities.ChatActivity">
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/app_bar_chat" />
+
 
     <com.github.bassaer.chatmessageview.view.ChatView
         android:id="@+id/chat_view"
