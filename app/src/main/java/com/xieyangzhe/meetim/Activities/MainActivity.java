@@ -28,6 +28,8 @@ import com.xieyangzhe.meetim.Utils.XMPPTool;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Fragment curFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (fragment != null) {
+            curFragment = fragment;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, fragment);
             transaction.commit();
@@ -134,5 +137,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        if (curFragment instanceof ChatListFragment) {
+            Fragment fragment = new ChatListFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, fragment);
+            transaction.commit();
+        }
+        super.onResume();
     }
 }

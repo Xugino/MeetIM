@@ -136,7 +136,11 @@ public class XMPPService extends Service {
 
                                     Intent intent = new Intent(MESSAGE_RECEIVER);
                                     intent.putExtra("FROM_USERNAME", message.getFrom().replaceAll("/Android", ""));
-                                    intent.putExtra("FROM_MSG_BODY", message.getBody());
+                                    String body = message.getBody();
+                                    if (body.contains(".png")) {
+                                        body = "[Picture]";
+                                    }
+                                    intent.putExtra("FROM_MSG_BODY", body);
                                     IMApplication.getAppContext().sendBroadcast(intent);
 
                                     if (ActivityLifecycleListener.isBackGround()) {

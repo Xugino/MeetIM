@@ -1,5 +1,6 @@
 package com.xieyangzhe.meetim.Utils;
 
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,8 @@ import com.xieyangzhe.meetim.Models.RecentChat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by joseph on 5/25/18.
@@ -88,9 +91,12 @@ public class DBTool {
             try {
                 cursor = db.query(tmpUsername, null, null, null, null, null, null);
                 if (cursor.getCount() != 0) {
-                    cursor.moveToFirst();
+                    cursor.moveToLast();
 
                     String chatMsg = cursor.getString(cursor.getColumnIndex("content"));
+                    if (chatMsg.contains(".png")) {
+                        chatMsg = "[Picture]";
+                    }
                     Calendar sendtime = Calendar.getInstance();
                     sendtime.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("sendtime")));
                     RecentChat recentChat = new RecentChat(contact, sendtime, chatMsg);
@@ -104,6 +110,21 @@ public class DBTool {
             }
         }
         db.close();
+        Collections.sort(recentChats, new SortByTime());
+
         return recentChats;
+    }
+
+    class SortByTime implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            RecentChat chat1 = (RecentChat) o1;
+            RecentChat chat2 = (RecentChat) o2;
+            if (chat1.getChatTime().getTimeInMillis() < chat2.getChatTime().getTimeInMillis()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
     }
 }
