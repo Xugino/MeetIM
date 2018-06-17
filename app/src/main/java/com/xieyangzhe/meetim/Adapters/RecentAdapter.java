@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.xieyangzhe.meetim.Activities.ChatActivity;
 import com.xieyangzhe.meetim.Models.RecentChat;
 import com.xieyangzhe.meetim.R;
+import com.xieyangzhe.meetim.Utils.TimeFormatter;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
 
     @Override
     public RecentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new RecentAdapter.ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contact, parent, false));
+        return new RecentAdapter.ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_recent, parent, false));
     }
 
     @Override
@@ -49,7 +50,8 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
         holder.imageRecent.setImageResource(R.drawable.ic_user);
         holder.textRecentName.setText(recentChat.getContact().getName());
         holder.textRecentMsg.setText(recentChat.getChatMsg());
-        holder.textRecentTime.setText(recentChat.getChatTime().toString());
+        TimeFormatter timeFormatter = new TimeFormatter();
+        holder.textRecentTime.setText(timeFormatter.getFormattedTimeText(recentChat.getChatTime()) );
 
         holder.content.setOnClickListener(view -> {
             Intent intent = new Intent(context, ChatActivity.class);
@@ -95,6 +97,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             textRecentName = itemView.findViewById(R.id.recent_name);
             imageRecent = itemView.findViewById(R.id.recent_head);
             textRecentMsg = itemView.findViewById(R.id.recent_message);

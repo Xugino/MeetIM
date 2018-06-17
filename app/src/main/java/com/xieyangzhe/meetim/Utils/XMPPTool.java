@@ -47,6 +47,8 @@ public class XMPPTool extends XMPPTCPConnection {
 
     public static ChatManager chatManager;
 
+    public static List<Contact> contactList;
+
     private XMPPTool(XMPPTCPConnectionConfiguration config) {
         super(config);
     }
@@ -158,8 +160,8 @@ public class XMPPTool extends XMPPTCPConnection {
         return false;
     }
 
-    public List<Contact> getContactList() {
-        List<Contact> contactList = new ArrayList<>();
+    public void getContactList() {
+        contactList = new ArrayList<>();
         String name;
         for (RosterEntry entry : Roster.getInstanceFor(getXmppTool()).getEntries()) {
             name = entry.getName();
@@ -169,7 +171,6 @@ public class XMPPTool extends XMPPTCPConnection {
             Contact contact = new Contact(entry.getUser(), name, "");
             contactList.add(contact);
         }
-        return contactList;
     }
 
     public boolean sendMessage(String msgBody, Contact contact) {

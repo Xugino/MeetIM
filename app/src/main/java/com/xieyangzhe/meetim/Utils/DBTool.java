@@ -8,7 +8,10 @@ import android.util.Log;
 
 import com.xieyangzhe.meetim.Models.ChatMessage;
 import com.xieyangzhe.meetim.Models.ChatMessageList;
+import com.xieyangzhe.meetim.Models.Contact;
+import com.xieyangzhe.meetim.Models.RecentChat;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -47,6 +50,7 @@ public class DBTool {
     }
 
     public ChatMessageList get(String username) {
+        Log.d("qqqqqq", username);
         ChatMessageList chatMessageList = new ChatMessageList();
         db = helper.getReadableDatabase();
         Cursor cursor;
@@ -58,7 +62,6 @@ public class DBTool {
 
         if (cursor.moveToFirst()) {
             do {
-
                 String content = cursor.getString(cursor.getColumnIndex("content"));
                 String fromuser = cursor.getString(cursor.getColumnIndex("fromuser"));
                 Calendar sendtime = Calendar.getInstance();
@@ -71,5 +74,36 @@ public class DBTool {
         db.close();
         return chatMessageList;
 
+    }
+
+    public ArrayList<RecentChat> getRecentChats() {
+        ArrayList<RecentChat> recentChats = new ArrayList<>();
+        db = helper.getReadableDatabase();
+        String tmpUsername;
+        Cursor cursor;
+
+        for (Contact contact : XMPPTool.getXmppTool().contactList) {
+
+            tmpUsername = contact.getName();
+            try {
+                cursor = db.query(tmpUsername, null, null, null, null, null, null);
+                if (cursor.getCount() != 0) {
+                    cursor.moveToFirst();
+
+                    String chatMsg = cursor.getString(cursor.getColumnIndex("content"));
+                    Calendar sendtime = Calendar.getInstance();
+                    sendtime.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("sendtime")));
+                    RecentChat recentChat = new RecentChat(contact, sendtime, chatMsg);
+                    Log.d("aaaaaaaaaaa", chatMsg);
+                    recentChats.add(recentChat);
+
+                    Log.d("test", chatMsg);
+                }
+            } catch (Exception e) {
+                Log.d("Error", "getRecentChats: " + e.getMessage());
+            }
+        }
+        db.close();
+        return recentChats;
     }
 }

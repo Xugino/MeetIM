@@ -47,8 +47,6 @@ public class ContactListFragment extends Fragment {
     }
 
     private void getContactData() {
-        new Thread(() -> {
-            contactList = XMPPTool.getXmppTool().getContactList();
-        }).start();
+        contactList = XMPPTool.getXmppTool().contactList;
     }
 }
