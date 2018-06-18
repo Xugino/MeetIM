@@ -5,17 +5,58 @@
     android:layout_height="match_parent"
     tools:context="com.xieyangzhe.meetim.Fragments.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:id="@+id/recent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent" >
+
+        <ImageView
+            android:paddingLeft="10dp"
+            android:id="@+id/me_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/main_icon" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Joseph"
+                    android:id="@+id/me_name"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/me_message"
+                android:text="This is my account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
     <Button
         android:id="@+id/button_logout"
         android:text="@string/logout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="#1fbaf3"
+        android:textColor="#ffffff"
+        />
 
-    <Button
-        android:id="@+id/test_img"
-        android:text="img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

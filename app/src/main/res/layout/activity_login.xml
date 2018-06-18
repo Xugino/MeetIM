@@ -4,31 +4,52 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="com.xieyangzhe.meetim.Activities.LoginActivity">
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
         <LinearLayout
+            android:layout_marginTop="30dp"
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/main_icon" />
+
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/head_left"
+                android:layout_alignBaseline="@+id/head_left"
+                >
 
                 <AutoCompleteTextView
+                    android:drawableLeft="@drawable/head_login"
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
@@ -36,11 +57,19 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_toRightOf="@+id/passwd_left">
 
                 <EditText
+                    android:drawableLeft="@drawable/icon"
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -54,24 +83,35 @@
 
             </android.support.design.widget.TextInputLayout>
 
+
+
             <Button
                 android:id="@+id/sign_in_button"
-                style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:layout_margin="20dp"
+                android:background="#1fbaf3"
+                android:text="Login"
+                android:textColor="#ffffff" />
 
-            <TextView
-                android:id="@+id/text_register"
-                android:layout_gravity="end"
-                android:textColor="#3F51B5"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/register"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/text_register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/register"
+                    android:textColor="#3F51B5" />
+            </RelativeLayout>
+
 
         </LinearLayout>
     </ScrollView>
